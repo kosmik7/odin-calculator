@@ -20,7 +20,7 @@ function operate(calcOperator, calcNumberA, calcNumberB) {
             return add(calcNumberA, calcNumberB);
         case '-':
             return subtract(calcNumberA, calcNumberB);
-        case '*':
+        case 'x':
             return multiply(calcNumberA, calcNumberB);
         case '/':
             return divide(calcNumberA, calcNumberB);
