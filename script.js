@@ -20,6 +20,7 @@ function recordPresses(e) {
     else if (pressed === 'backspace') handleBackspace();
     else if (pressed === '+/-') handleNegate();
     else if (pressed === '=') operate('result');
+    else if (pressed === '%') handlePercentage();
 
     updateDisplay()
 };
@@ -29,7 +30,7 @@ function isNumber(pressed) {
 }
 
 function isOperator(pressed) {
-    return ['+', '-', 'x', '/', '%'].includes(pressed);
+    return ['+', '-', 'x', '/'].includes(pressed);
 }
 
 function handleNumber(pressed) {
@@ -53,6 +54,16 @@ function handleDecimal() {
     if (!currentValue.includes('.')) currentValue += '.';
 };
 
+function handlePercentage() {
+    currentValue = Number.parseFloat((currentValue / 100).toFixed(2));
+}
+
+function handleNegate() {
+    if (currentValue === '') return;
+    else if (currentValue.charAt(0) === '-') currentValue = currentValue.slice(1);
+    else currentValue = '-' + currentValue;
+};
+
 function handleBackspace() {
     currentValue = currentValue.length > 1 ? currentValue.slice(0, -1) : '0';
 };
@@ -61,12 +72,6 @@ function handleClear() {
     previousValue = '';
     currentValue = '0';
     operator = '';
-};
-
-function handleNegate() {
-    if (currentValue === '') return;
-    else if (currentValue.charAt(0) === '-') currentValue = currentValue.slice(1);
-    else currentValue = '-' + currentValue;
 };
 
 function updateDisplay() {
@@ -87,7 +92,6 @@ function operate(helper) {
     else if (operator === '-') previousValue = Number.parseFloat((a - b).toFixed(2));
     else if (operator === 'x') previousValue = Number.parseFloat((a * b).toFixed(2));
     else if (operator === '/') previousValue = Number.parseFloat((a / b).toFixed(2));
-    else if (operator === '%') previousValue = Number.parseFloat(((a / 100) * b).toFixed(2));
 
     currentValue = ''
     previousValue = String(previousValue)
