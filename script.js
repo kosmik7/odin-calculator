@@ -2,58 +2,94 @@ const screenResultElement = document.getElementById('calc__result');
 const screenHistoryElement = document.getElementById('calc__history');
 const calcButtonsElement = document.getElementById('calc__btn-container');
 
-let calcNumberA;
-let calcNumberB;
-let calcOperator;
-let currentNumber = '';
-let hasPoint = false
-const numbers = ['0','1','2','3','4','5','6','7','8','9']
+let previousValue = '';
+let currentValue = '0';
+let operator = '';
 
 calcButtonsElement.addEventListener('click', recordPresses);
 
 function recordPresses(e) {
+    e.preventDefault()
     if (!e.target.classList.contains('calc__btn')) return;
-    switch (true) {
-        case e.target.dataset.id === '.':
-            currentNumber += hasPoint ? '' : '.';
-            hasPoint = true;
-            break;
-        case numbers.includes(e.target.dataset.id):
-            currentNumber += e.target.dataset.id;
-            break;
-        default:
-            currentNumber = '0';
-            break;
+    const pressed = e.target.dataset.id
+
+    if (isNumber(pressed)) handleNumber(pressed);
+    else if (isOperator(pressed)) handleOperator(pressed);
+    else if (pressed === '.') handleDecimal();
+    else if (pressed === 'clear') handleClear();
+    else if (pressed === 'backspace') handleBackspace();
+    else if (pressed === '+/-') handleNegate();
+    else if (pressed === '=') operate('result');
+
+    updateDisplay()
+};
+
+function isNumber(pressed) {
+    return ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(pressed);
+}
+
+function isOperator(pressed) {
+    return ['+', '-', 'x', '/', '%'].includes(pressed);
+}
+
+function handleNumber(pressed) {
+    if (operator === '') previousValue = ''
+    currentValue = currentValue === '0' ? pressed : currentValue + pressed;
+};
+
+function handleOperator(pressed) {
+    if (!previousValue && currentValue === '0') return;
+    if (currentValue === '') return operator = pressed;
+
+    if (previousValue && operator) operate();
+    else {
+        previousValue = currentValue;
+        currentValue = ''
     }
-    screenResultElement.textContent = currentNumber;
+    operator = pressed;
 };
 
-
-function add(a, b) {
-    return a + b;
+function handleDecimal() {
+    if (!currentValue.includes('.')) currentValue += '.';
 };
 
-function subtract(a, b) {
-    return a - b;
+function handleBackspace() {
+    currentValue = currentValue.length > 1 ? currentValue.slice(0, -1) : '0';
 };
 
-function multiply(a, b) {
-    return a * b;
+function handleClear() {
+    previousValue = '';
+    currentValue = '0';
+    operator = '';
 };
 
-function divide(a, b) {
-    return a / b;
+function handleNegate() {
+    if (currentValue === '') return;
+    else if (currentValue.charAt(0) === '-') currentValue = currentValue.slice(1);
+    else currentValue = '-' + currentValue;
 };
 
-function operate(calcOperator, calcNumberA, calcNumberB) {
-    switch (calcOperator) {
-        case '+':
-            return add(calcNumberA, calcNumberB);
-        case '-':
-            return subtract(calcNumberA, calcNumberB);
-        case 'x':
-            return multiply(calcNumberA, calcNumberB);
-        case '/':
-            return divide(calcNumberA, calcNumberB);
+function updateDisplay() {
+    let displayString = `${previousValue} ${operator} ${currentValue}`;
+    if (displayString.length > 13) {
+        screenResultElement.textContent = `TOO LONG`;
     }
+    else screenResultElement.textContent = displayString;
+};
+
+function operate(helper) {
+    if (!previousValue || !operator || !currentValue) return;
+
+    let a = Number.parseFloat(previousValue)
+    let b = Number.parseFloat(currentValue)
+
+    if (operator === '+') previousValue = Number.parseFloat((a + b).toFixed(2));
+    else if (operator === '-') previousValue = Number.parseFloat((a - b).toFixed(2));
+    else if (operator === 'x') previousValue = Number.parseFloat((a * b).toFixed(2));
+    else if (operator === '/') previousValue = Number.parseFloat((a / b).toFixed(2));
+    else if (operator === '%') previousValue = Number.parseFloat(((a / 100) * b).toFixed(2));
+
+    currentValue = ''
+    previousValue = String(previousValue)
+    if (helper === 'result') operator = ''
 }
