@@ -65,7 +65,8 @@ function handleNegate() {
 };
 
 function handleBackspace() {
-    currentValue = currentValue.length > 1 ? currentValue.slice(0, -1) : '0';
+    if (currentValue.length > 1) currentValue = currentValue.slice(0, -1);
+    else currentValue = previousValue ? '' : '0';
 };
 
 function handleClear() {
