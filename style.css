@@ -142,11 +142,6 @@ body {
     background-color: #000;
 }
 
-.calc__btn--0 {
-    aspect-ratio: auto;
-    grid-column: span 2;
-}
-
 .calc__btn--equal {
     background-color: var(--equal-color);
     color: var(--accent-text-color);
