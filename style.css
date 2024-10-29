@@ -111,6 +111,7 @@ body {
     justify-content: center;
     transform-style: preserve-3d;
     transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+    user-select: none;
 }
 
 .calc__btn:hover:before {
