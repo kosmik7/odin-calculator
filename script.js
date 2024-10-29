@@ -104,3 +104,32 @@ function operate(helper) {
     if (helper === 'result') operator = ''
 }
 
+document.addEventListener('keydown', (e) => {
+    const key = e.key;
+    const keyMap = {
+        '0': '0',
+        '1': '1',
+        '2': '2',
+        '3': '3',
+        '4': '4',
+        '5': '5',
+        '6': '6',
+        '7': '7',
+        '8': '8',
+        '9': '9',
+        '+': '+',
+        '-': '-',
+        '*': 'x',
+        '/': '/',
+        '.': '.',
+        '=': '=',
+        'Enter': '=',
+        'Backspace': 'backspace',
+        'Escape': 'clear'
+    };
+
+    if (keyMap[key]) {
+        const button = document.querySelector(`.calc__btn[data-id="${keyMap[key]}"]`);
+        if (button) button.click();
+    }
+});
