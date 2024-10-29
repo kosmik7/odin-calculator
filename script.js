@@ -5,6 +5,7 @@ const calcButtonsElement = document.getElementById('calc__btn-container');
 let previousValue = '';
 let currentValue = '0';
 let operator = '';
+let displayMsg;
 
 calcButtonsElement.addEventListener('click', recordPresses);
 
@@ -76,15 +77,19 @@ function handleClear() {
 };
 
 function updateDisplay() {
+    if (displayMsg) {
+        screenResultElement.textContent = displayMsg
+        return displayMsg = null;
+    };
+
     let displayString = `${previousValue} ${operator} ${currentValue}`;
-    if (displayString.length > 14) {
-        screenResultElement.textContent = displayString.slice(0, 13);
-    }
-    else screenResultElement.textContent = displayString;
+    if (displayString.length > 14) screenResultElement.textContent = displayString.slice(0, 13);
+    else screenResultElement.textContent = displayString;    
 };
 
 function operate(helper) {
     if (!previousValue || !operator || !currentValue) return;
+    if (operator === '/' && currentValue === '0') return displayMsg = 'Math says no!';
 
     let a = Number.parseFloat(previousValue)
     let b = Number.parseFloat(currentValue)
@@ -98,3 +103,4 @@ function operate(helper) {
     previousValue = String(previousValue)
     if (helper === 'result') operator = ''
 }
+
