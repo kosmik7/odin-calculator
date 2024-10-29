@@ -76,8 +76,8 @@ function handleClear() {
 
 function updateDisplay() {
     let displayString = `${previousValue} ${operator} ${currentValue}`;
-    if (displayString.length > 13) {
-        screenResultElement.textContent = `TOO LONG`;
+    if (displayString.length > 14) {
+        screenResultElement.textContent = displayString.slice(0, 13);
     }
     else screenResultElement.textContent = displayString;
 };
